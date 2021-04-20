@@ -57,10 +57,21 @@ string TicTacToe::get_player()const
 {   return player;
 }
 
-void TicTacToe::display_board()const
-{   cout << pegs[0] << "|" << pegs[1] << "|" << pegs[2] << "\n";
-    cout << pegs[3] << "|" << pegs[4] << "|" << pegs[5] << "\n";
-    cout << pegs[6] << "|" << pegs[7] << "|" << pegs[8] << "\n";
+std::ostream& operator<<(ostream& out, const TicTacToe& gameobj)
+{   out << gameobj.pegs[0] << "|" << gameobj.pegs[1] << "|" << gameobj.pegs[2] << "\n";
+    out << gameobj.pegs[3] << "|" << gameobj.pegs[4] << "|" << gameobj.pegs[5] << "\n";
+    out << gameobj.pegs[6] << "|" << gameobj.pegs[7] << "|" << gameobj.pegs[8] << "\n";
+
+    return out;
+}
+
+std::istream& operator<<(istream& in, TicTacToe& gameobj)
+{
+    int position;
+    cout << "Enter a position 1-9 to mark the board: ";
+    in >> position;
+    gameobj.mark_board(position);
+    return in;
 }
 
 string TicTacToe::get_winner()
@@ -122,4 +133,37 @@ bool TicTacToe::check_diagonal_win()
         return true;
 
     return false;
+}
+
+void TicTacToeManager::save_game(TicTacToe gameobj)
+{
+    games.push_back(gameobj);
+
+    update_winner_count(gameobj.get_winner());
+}
+
+void TicTacToeManager::update_winner_count(std::string winner)
+{
+    if (winner == "X")
+        ++x_wins;
+    else if (winner == "O")
+        ++o_wins;
+    else
+        ++ties;
+}
+
+void TicTacToeManager::get_winner_total(int& x, int& o, int& t)
+{
+    x = x_wins;
+    o = o_wins;
+    t = ties;
+}
+
+std::ostream& operator<<(ostream& out, const TicTacToeManager& managerobj)
+{
+    int vec_size = managerobj.games.size();
+    for (int i = 0; i < vec_size; i++)
+        out << managerobj.games[i] << "\n";
+        
+    return out;
 }
