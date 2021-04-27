@@ -1,6 +1,18 @@
 #include "tic_tac_toe.h"
-#include "tic_tac_toe_manager.h"
+#include <cmath>
 using namespace std;
+
+TicTacToe::TicTacToe()
+{
+}
+
+TicTacToe::TicTacToe(int s):pegs(s*s, " ")
+{   
+}
+
+TicTacToe::~TicTacToe()
+{
+}
 
 void TicTacToe::set_next_player()
 {   if (player == "X")
@@ -20,9 +32,11 @@ bool TicTacToe::check_board_full()
 }
 
 void TicTacToe::clear_board()
-{   pegs.clear();
-
-    for(int count = 0; count < 9; count++)
+{   int vec_size = pegs.size();
+    
+    pegs.clear();
+    
+    for(int count = 0; count < vec_size; count++)
         pegs.push_back(" ");
 }
 
@@ -58,20 +72,30 @@ string TicTacToe::get_player()const
 {   return player;
 }
 
-std::ostream& operator<<(ostream& out, const TicTacToe& gameobj)
-{   out << gameobj.pegs[0] << "|" << gameobj.pegs[1] << "|" << gameobj.pegs[2] << "\n";
-    out << gameobj.pegs[3] << "|" << gameobj.pegs[4] << "|" << gameobj.pegs[5] << "\n";
-    out << gameobj.pegs[6] << "|" << gameobj.pegs[7] << "|" << gameobj.pegs[8] << "\n";
+std::ostream& operator<<(ostream& out, const unique_ptr<TicTacToe>& game_ptr)
+{   int vec_size = game_ptr->pegs.size();
+    int peg_index = 0;
+    for (int j = 0; j < sqrt(vec_size); j++)
+    {
+        for (int i = 0; i < sqrt(vec_size); i++)
+        {
+            out << game_ptr->pegs[peg_index++];
+            if (i < sqrt(vec_size) - 1)
+                out << "|";
+        }
 
+        out << "\n";
+    }
     return out;
 }
 
-std::istream& operator<<(istream& in, TicTacToe& gameobj)
+std::istream& operator<<(istream& in, unique_ptr<TicTacToe>& game_ptr)
 {
     int position;
-    cout << "Enter a position 1-9 to mark the board: ";
+    int vec_size = game_ptr->pegs.size();
+    cout << "Enter a position 1 to " << vec_size << " to mark the board: ";
     in >> position;
-    gameobj.mark_board(position);
+    game_ptr->mark_board(position);
     return in;
 }
 
@@ -87,52 +111,14 @@ void TicTacToe::set_winner()
 }
 
 bool TicTacToe::check_column_win()
-{   if ((pegs[0] == "X" && pegs[3] == "X" && pegs[6] == "X") ||
-        
-        (pegs[1] == "X" && pegs[4] == "X" && pegs[7] == "X") ||
-        
-        (pegs[2] == "X" && pegs[5] == "X" && pegs[8] == "X") ||
-        
-        (pegs[0] == "O" && pegs[3] == "O" && pegs[6] == "O") ||
-        
-        (pegs[1] == "O" && pegs[4] == "O" && pegs[7] == "O") ||
-        
-        (pegs[2] == "O" && pegs[5] == "O" && pegs[8] == "O"))
-        
-        return true;
-
-    return false;
+{   return false;
 }
 
 bool TicTacToe::check_row_win()
-{   if ((pegs[0] == "X" && pegs[1] == "X" && pegs[2] == "X") ||
-        
-        (pegs[3] == "X" && pegs[4] == "X" && pegs[5] == "X") ||
-        
-        (pegs[6] == "X" && pegs[7] == "X" && pegs[8] == "X") ||
-        
-        (pegs[0] == "O" && pegs[1] == "O" && pegs[2] == "O") ||
-        
-        (pegs[3] == "O" && pegs[4] == "O" && pegs[5] == "O") ||
-        
-        (pegs[6] == "O" && pegs[7] == "O" && pegs[8] == "O"))
-        
-        return true;
-
-    return false;
+{   return false;
 }
 
 bool TicTacToe::check_diagonal_win()
-{   if ((pegs[0] == "X" && pegs[4] == "X" && pegs[8] == "X") ||
-        
-        (pegs[2] == "X" && pegs[4] == "X" && pegs[6] == "X") ||
-        
-        (pegs[0] == "O" && pegs[4] == "O" && pegs[8] == "O") ||
-        
-        (pegs[2] == "O" && pegs[4] == "O" && pegs[6] == "O"))
-        
-        return true;
-
-    return false;
+{   return false;
 }
 
