@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+﻿cmake_minimum_required(VERSION 3.8)
 
 project("cosc1337")
 include_directories(inc)
@@ -34,4 +34,6 @@ ADD_SUBDIRECTORY(src)
 
 enable_testing()
 ADD_SUBDIRECTORY(test)
+
+
 
